@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,243 +8,350 @@
 
     <meta
             name="description"
-            content="Built using Spring Boot, Hibernate, Spring Data JPA, Thymeleaf"
+            content="Portfolio of Shiwans Pal - Java Developer Intern at Frugality Fintech, specializing in Java, Spring Boot, Microservices, and Cloud Architectures."
     />
 
     <!-- Google / Search Engine Tags -->
-    <meta itemprop="name" content="Aditya Chaurasia's Portfolio">
-    <meta itemprop="description" content="Built using Spring Boot, Hibernate, Spring Data JPA, Thymeleaf">
+    <meta itemprop="name" content="Shiwans Pal's Portfolio">
+    <meta itemprop="description" content="Portfolio of Shiwans Pal - Java Developer Intern at Frugality Fintech, specializing in Java, Spring Boot, Microservices, and Cloud Architectures.">
+    <meta itemprop="image" th:content="@{/assets/images/sharing-card.png}">
 
-    <!-- Reference screenshot of updated site's header in place of content -->
-    <meta itemprop="image" content="assets/images/sharing-card.png">
-
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://github.com/chaurasia-aditya/spring-portfolio-website">
+    <!-- Facebook / Open Graph Meta Tags -->
+    <meta property="og:url" content="https://github.com/Shiwans60">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Aditya Chaurasia's Portfolio">
-    <meta property="og:description" content="Built using Spring Boot, Hibernate, Spring Data JPA, Thymeleaf">
-
-    <!-- Reference screenshot of updated site's header in content -->
-    <meta property="og:image" content="assets/images/sharing-card.png">
+    <meta property="og:title" content="Shiwans Pal's Portfolio">
+    <meta property="og:description" content="Portfolio of Shiwans Pal - Java Developer Intern at Frugality Fintech, specializing in Java, Spring Boot, Microservices, and Cloud Architectures.">
+    <meta property="og:image" th:content="@{/assets/images/sharing-card.png}">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Aditya Chaurasia's Portfolio">
-    <meta name="twitter:description" content="Built using Spring Boot, Hibernate, Spring Data JPA, Thymeleaf">
+    <meta name="twitter:title" content="Shiwans Pal's Portfolio">
+    <meta name="twitter:description" content="Portfolio of Shiwans Pal - Java Developer Intern at Frugality Fintech, specializing in Java, Spring Boot, Microservices, and Cloud Architectures.">
+    <meta name="twitter:image" th:content="@{/assets/images/sharing-card.png}">
 
-    <!-- Reference screenshot of updated site's header in content -->
-    <meta name="twitter:image" content="assets/images/sharing-card.png">
-
-
-    <!-- Update favicon href attribute with image of yourself -->
+    <!-- Favicon -->
     <link
             rel="shortcut icon"
-            href="assets/images/favicon.ico"
+            th:href="@{/assets/images/favicon.ico}"
             type="image/ico"
     />
 
     <!-- Preloading fonts for better performance -->
-
     <link
             rel="preload"
-            href="assets/fonts/Mona-Sans.woff2"
+            th:href="@{/assets/fonts/Mona-Sans.woff2}"
             as="font"
             type="font/woff2"
             crossorigin
     />
 
-    <link rel="stylesheet" href="style.css"  />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+    <script th:src="@{/script.js}" defer></script>
 
-    <!-- Your name here -->
-    <title>Aditya Chaurasia's Portfolio</title>
+    <title>Shiwans Pal's Portfolio</title>
 </head>
 
 <body>
 
 <script>
-    const theme = localStorage.getItem("theme") || "dark";
-    document.body.classList.add(theme);
+    (() => {
+        let savedTheme = "dark";
+        try {
+            savedTheme = localStorage.getItem("theme") || "dark";
+        } catch (error) {
+            // Keep the default theme when browser storage is unavailable.
+        }
+        document.body.classList.add(savedTheme === "light" ? "light" : "dark");
+    })();
 </script>
 
 <script th:inline="javascript">
-    let rateLimitError = /*[[${rateLimitError != null ? '"' + rateLimitError + '"' : 'null'}]]*/;
-    if (rateLimitError !== 'null') {
+    const rateLimitError = /*[[${rateLimitError}]]*/ null;
+
+    if (typeof rateLimitError === "string" && rateLimitError.trim().length > 0) {
         alert(rateLimitError);
     }
 </script>
 
-<header class="header">
-
+<header class="header" id="top">
+    <!-- Compact, always-visible section navigation -->
     <div class="menu-btn-container">
-        <div class="container">
-            <button type="button"  class="menu-btn">menu</button>
-        </div>
+        <button type="button"
+                class="menu-btn"
+                aria-label="Toggle navigation menu"
+                aria-controls="primary-navigation"
+                aria-expanded="false">Menu</button>
     </div>
 
-    <nav class="nav hidden">
+    <nav class="nav nav-pill" id="primary-navigation" aria-label="Primary navigation">
         <ol class="nav-items">
-            <li class="nav-item"><a href="#">Home</a></li>
-            <li class="nav-item"><a href="#education">Education</a></li>
-            <li class="nav-item"><a href="#experience">Experience</a></li>
-            <li class="nav-item"><a href="#research">Research</a></li>
-            <li class="nav-item"><a href="#projects">Projects</a></li>
-            <li class="nav-item"><a href="#skills">Skills</a></li>
-            <li class="nav-item">
-                <a href="#contact" data-focused="last-focused">Contact</a>
+            <li class="nav-item"><a class="nav-link" href="#top" aria-current="location">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
+            <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+            <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+            <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+            <li class="nav-item"><a class="nav-link" href="#achievements">Achievements</a></li>
+            <li class="nav-item"><a class="nav-link" href="#responsibilities">Leadership</a></li>
+            <li class="nav-item" th:if="${!#lists.isEmpty(researchEntries)}">
+                <a class="nav-link" href="#research">Research</a>
             </li>
-            <li class="nav-item"><a th:href="@{/admin}">Admin</a></li>
+            <li class="nav-item"><a class="nav-link" href="#contact" data-focused="last-focused">Contact</a></li>
+            <li class="nav-item nav-admin"><a class="nav-link" th:href="@{/admin}">Admin</a></li>
         </ol>
     </nav>
 
-    <div class="container">
-        <div class="header-textbox">
-            <!-- Replace with your name and job title -->
-            <h1 class="h1">
-                <span>Hi, I'm Aditya Chaurasia</span>
-                <span>Software Engineer</span>
-            </h1>
+    <div class="container hero-container">
+        <div class="header-textbox hero-layout animate-hero">
+            <div class="hero-copy">
+                <p class="hero-kicker">
+                    <span class="hero-kicker-dot" aria-hidden="true"></span>
+                     BACKEND ENGINEERING <span aria-hidden="true">·</span> Pune, India
+                </p>
 
-            <!-- Add a small introductory paragraph about yourself -->
-            <p class="header-text">
-                A goal-driven Software Engineer, with 4 years of experience in the IoT space at Samsung.
-                I like working on projects seeking to connect devices and humans more intimately.
-            </p>
+                <h1 class="h1">
+                    <span>Hi, I'm Shiwans </span>
+                    <span class="highlight-title"></span>
+                </h1>
 
-            <div class="header-btns">
-                <a href="#contact" class="btn btn-cta">Connect</a>
-                <a href="https://www.dropbox.com/scl/fi/8wphy29nq6mtd13x99973/Aditya-Chaurasia-Resume.pdf?rlkey=kd1gj5s2a8gp5wgt7b8s6ou9l&st=qplua1uc&dl=0&dl=1" download="Aditya_Chaurasia_resume.pdf" class="btn btn-secondary">Resume</a>
+                <p class="header-text">
+                    Final-year engineering student with 7 months of production experience as a Java Developer Intern at Frugality Fintech.
+                    <br><br>
+
+                    Backend-focused engineer passionate about building scalable, cloud-native systems using Java, Spring Boot, Microservices, WebFlux, RabbitMQ, and distributed technologies. Driven by system design, engineering trade-offs, and building reliable solutions at scale.
+
+                </p>
+
+                <div class="hero-specialties" aria-label="Areas of focus">
+                    <span class="hero-specialty">Java &amp; Spring Boot</span>
+                    <span class="hero-specialty">Microservices</span>
+                    <span class="hero-specialty">Cloud &amp; APIs</span>
+                    <span class="hero-specialty">Generative AI</span>
+                </div>
+
+                <div class="header-btns">
+                    <a href="#contact" class="btn btn-cta">Connect</a>
+                    <a href="https://drive.google.com/file/d/1ccz3Nv7Rr99mcmfsTbjMwpHjGvJ1Sxvp/view?usp=drive_link"
+                       class="btn btn-secondary"
+                       target="_blank"
+                       rel="noopener noreferrer">Resume</a>
+                </div>
+
+                <!-- Hero Social Links -->
+                <div class="hero-socials">
+
+                    <a href="https://github.com/Shiwans60"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       aria-label="GitHub">
+                        <img th:src="@{/assets/images/social-links/github.svg}"
+                             alt="GitHub">
+                        <span>GitHub</span>
+                        <span class="hero-social-arrow">↗</span>
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/shiwans-pal-419249248/"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       aria-label="LinkedIn">
+                        <img th:src="@{/assets/images/social-links/linkedin.svg}"
+                             alt="LinkedIn">
+                        <span>LinkedIn</span>
+                        <span class="hero-social-arrow">↗</span>
+                    </a>
+
+                </div>
             </div>
+
+            <figure class="hero-portrait interactive-card">
+                <div class="hero-portrait-frame">
+                    <img class="hero-portrait-image"
+                         th:src="@{/assets/images/shiwans-profile.png}"
+                         src="/assets/images/shiwans-profile.png"
+                         alt="Portrait of Shiwans Pal"
+                         width="702"
+                         height="935"
+                         fetchpriority="high"
+                         decoding="async" />
+                </div>
+                <figcaption class="hero-portrait-caption">
+                    <span class="hero-caption-mark" aria-hidden="true"></span>
+                    Building scalable, reliable systems
+                </figcaption>
+            </figure>
         </div>
     </div>
 </header>
 
 <main>
 
-    <!-- Education & Experience -->
-    <section class="career-section">
+    <!-- ===================== EDUCATION TIMELINE ===================== -->
+    <section class="tl-section reveal-on-scroll" id="education">
         <div class="container">
-            <div class="career-grid">
-                <div class="career-column career-column--education" id="education">
-                    <h2 class="h2">Education</h2>
-                    <div class="education-scroll" th:if="${!#lists.isEmpty(education)}">
-                        <article class="education-entry" th:each="educationEntry : ${education}">
-                            <div class="education-entry-header">
-                                <img class="education-entry-badge"
-                                     th:if="${educationEntry.imagePath != null}"
-                                     th:src="@{'assets/images/education/' + ${educationEntry.imagePath}}"
-                                     th:alt="${educationEntry.universityName}"
-                                     loading="lazy" />
-                                <img class="education-entry-badge"
-                                     th:if="${educationEntry.imagePath == null}"
-                                     th:src="@{/assets/images/default-img.webp}"
-                                     alt="Education institution"
-                                     loading="lazy" />
-                                <div class="education-entry-info">
-                                    <h3 class="education-entry-school" th:text="${educationEntry.universityName}">University Name</h3>
-                                    <p class="education-entry-degree"
-                                       th:if="${educationEntry.program ne null}"
-                                       th:text="${educationEntry.degree + ' · ' + educationEntry.program}"
-                                       th:else="${educationEntry.degree}">Degree</p>
-                                    <p class="education-entry-dates" th:if="${educationEntry.startDate != null}">
-                                        <span th:text="${educationEntry.startDate}">Start Date</span>
-                                        <span th:if="${educationEntry.endDate != null}"> – </span>
-                                        <span th:if="${educationEntry.endDate != null}" th:text="${educationEntry.endDate}">End Date</span>
-                                        <span th:if="${educationEntry.endDate == null}"> – Present</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <details class="education-courses-toggle"
-                                     th:if="${educationEntry.coursesTaken != null and !#strings.isEmpty(educationEntry.coursesTaken)}">
-                                <summary class="education-courses-summary">Coursework</summary>
-                                <ul class="education-courses">
-                                    <li th:each="course : ${#strings.listSplit(educationEntry.coursesTaken, ',')}"
-                                        th:text="${#strings.trim(course)}"></li>
-                                </ul>
-                            </details>
-                        </article>
-                    </div>
+            <h2 class="h2 tl-section-heading">Education</h2>
+            <div class="tl-wrapper" th:if="${!#lists.isEmpty(education)}">
+                <!-- Vertical progress line (filled by JS scroll) -->
+                <div class="tl-line" aria-hidden="true">
+                    <div class="tl-line-fill"></div>
                 </div>
 
-                <div class="career-column career-column--experience" id="experience">
-                    <h2 class="h2">Experience</h2>
-                    <div class="experience-scroll" th:if="${!#lists.isEmpty(workEx)}">
-                        <article class="experience-entry" th:each="experience : ${workEx}">
-                            <header class="experience-entry-header">
-                                <h3 class="experience-entry-role" th:text="${experience.jobTitle}">Job Title</h3>
-                                <p class="experience-entry-meta">
-                                    <span th:text="${experience.companyName}">Company Name</span>
-                                    <span class="experience-entry-separator" aria-hidden="true">·</span>
-                                    <span>
-                        <span th:text="${experience.startDate}">Start</span> -
-                        <span th:if="${experience.endDate != null}" th:text="${experience.endDate}">End</span>
-                        <span th:if="${experience.endDate == null}">Present</span>
-                      </span>
-                                </p>
-                            </header>
-                            <ol class="industry-technologies" th:if="${not #lists.isEmpty(experience.descPoints)}">
-                                <li th:each="descPoint : ${experience.descPoints}" th:text="${descPoint}"></li>
-                            </ol>
-                        </article>
-                    </div>
+                <!-- Timeline entries rendered from DB -->
+                <div class="tl-entries">
+                    <article class="tl-entry"
+                             th:classappend="${iterStat.odd} ? 'tl-entry--left' : 'tl-entry--right'"
+                             th:each="educationEntry, iterStat : ${education}">
+                        <!-- Node on the timeline line -->
+                        <div class="tl-node" aria-hidden="true">
+                            <div class="tl-node-ring"></div>
+                            <div class="tl-node-dot"></div>
+                        </div>
+
+                        <!-- Card content -->
+                        <div class="tl-card interactive-card">
+                            <div class="tl-card-inner">
+                                <div class="tl-card-header tl-education-header">
+
+                                    <!-- Left side: Education details -->
+                                    <div class="tl-education-main">
+                                        <h3 class="tl-institution"
+                                            th:utext="${educationEntry.universityName == 'Army Institute of Technology, Pune'
+        ? 'Army Institute of Technology<br>Pune'
+        : educationEntry.universityName}">
+                                            University Name
+                                        </h3>
+
+                                        <p class="tl-role"
+                                           th:text="${educationEntry.degree}">
+                                            Degree
+                                        </p>
+
+                                        <p class="tl-dates"
+                                           th:if="${educationEntry.startDate != null}">
+                                            <span class="tl-date-icon" aria-hidden="true">📅</span>
+
+                                            <span th:text="${#temporals.format(educationEntry.startDate, 'MMM yyyy')}">Start</span>
+
+                                            <span th:if="${educationEntry.endDate != null}"> – </span>
+
+                                            <span th:if="${educationEntry.endDate != null}"
+                                                  th:text="${#temporals.format(educationEntry.endDate, 'MMM yyyy')}">End</span>
+
+                                            <span th:if="${educationEntry.endDate == null}"> – Present</span>
+                                        </p>
+                                    </div>
+
+                                    <!-- Right side: Logo above Percentage / CGPA -->
+                                    <div class="tl-education-aside">
+
+                                        <div class="tl-institution-logo"
+                                             th:if="${educationEntry.imagePath != null and !#strings.isEmpty(educationEntry.imagePath)}">
+                                            <img th:src="${educationEntry.imagePath}"
+                                                 th:alt="${educationEntry.universityName + ' logo'}"
+                                                 loading="lazy">
+                                        </div>
+
+                                        <span class="tl-badge tl-education-badge"
+                                              th:if="${educationEntry.program != null and !#strings.isEmpty(educationEntry.program)}"
+                                              th:text="${educationEntry.program}">
+            Percentage / CGPA
+        </span>
+
+                                    </div>
+                                </div>
+
+                                <details class="tl-courses-toggle"
+                                         th:if="${educationEntry.coursesTaken != null and !#strings.isEmpty(educationEntry.coursesTaken)}">
+                                    <summary class="tl-courses-summary">Relevant Coursework</summary>
+                                    <ul class="tl-courses-list">
+                                        <li th:each="course : ${#strings.listSplit(educationEntry.coursesTaken, ',')}"
+                                            th:text="${#strings.trim(course)}"></li>
+                                    </ul>
+                                </details>
+                            </div>
+                        </div>
+                    </article>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Research -->
-    <section class="research-section" th:if="${!#lists.isEmpty(researchEntries)}">
+    <!-- ===================== EXPERIENCE TIMELINE ===================== -->
+    <section class="tl-section reveal-on-scroll" id="experience">
         <div class="container">
-            <h2 class="h2" id="research">Research</h2>
-            <div class="research-list">
-                <article class="research-card" th:each="entry : ${researchEntries}">
-                    <div class="research-card-header">
-                        <span class="research-type" th:text="${entry.type}">Patent</span>
-                        <p class="research-meta">
-                  <span th:if="${entry.referenceNumber != null and !#strings.isEmpty(entry.referenceNumber)}"
-                        th:text="${entry.referenceNumber}">US 10,000,000</span>
-                            <span th:if="${entry.status != null and !#strings.isEmpty(entry.status)}"
-                                  th:text="${entry.status}">Granted</span>
-                            <span th:if="${entry.publishedDate != null}"
-                                  th:text="${#temporals.format(entry.publishedDate, 'MMM yyyy')}">Jan 2024</span>
-                        </p>
-                    </div>
-                    <h3 class="research-title" th:text="${entry.title}">Research title</h3>
-                    <p class="research-byline"
-                       th:if="${(entry.authors != null and !#strings.isEmpty(entry.authors)) or (entry.venue != null and !#strings.isEmpty(entry.venue))}">
-                <span th:if="${entry.authors != null and !#strings.isEmpty(entry.authors)}"
-                      th:text="${entry.authors}">Authors</span>
-                        <span th:if="${entry.authors != null and !#strings.isEmpty(entry.authors) and entry.venue != null and !#strings.isEmpty(entry.venue)}"> · </span>
-                        <span th:if="${entry.venue != null and !#strings.isEmpty(entry.venue)}"
-                              th:text="${entry.venue}">Venue</span>
-                    </p>
-                    <p class="research-summary" th:if="${entry.description != null and !#strings.isEmpty(entry.description)}"
-                       th:text="${entry.description}">Summary</p>
-                    <a th:if="${entry.link != null and !#strings.isEmpty(entry.link)}"
-                       th:href="${entry.link}"
-                       class="link research-link"
-                       target="_blank"
-                       rel="noopener"
-                       th:text="${entry.type == 'Patent' ? 'View Patent' : 'View Publication'}">View</a>
-                </article>
+            <h2 class="h2 tl-section-heading">Experience</h2>
+            <div class="tl-wrapper" th:if="${!#lists.isEmpty(workEx)}">
+                <div class="tl-line" aria-hidden="true">
+                    <div class="tl-line-fill"></div>
+                </div>
+
+                <div class="tl-entries">
+                    <article class="tl-entry"
+                             th:classappend="${iterStat.odd} ? 'tl-entry--left' : 'tl-entry--right'"
+                             th:each="experience, iterStat : ${workEx}">
+                        <div class="tl-node" aria-hidden="true">
+                            <div class="tl-node-ring"></div>
+                            <div class="tl-node-dot"></div>
+                        </div>
+
+                        <div class="tl-card interactive-card">
+                            <div class="tl-card-inner">
+                                <div class="tl-card-header tl-experience-header">
+                                    <div class="tl-experience-main">
+                                        <div class="tl-title-row">
+                                            <h3 class="tl-institution"
+                                                th:text="${experience.jobTitle}">Job Title</h3>
+                                            <span class="tl-badge tl-badge--active"
+                                                  th:if="${experience.endDate == null}">Current</span>
+                                        </div>
+                                        <p class="tl-role">
+                                            <span class="tl-company"
+                                                  th:text="${experience.companyName}">Company</span>
+                                            <span class="tl-sep" aria-hidden="true"> · </span>
+                                            <span class="tl-location">Pune</span>
+                                            <span class="tl-dates">
+                                                <span th:text="${#temporals.format(experience.startDate, 'MMM yyyy')}">Start</span>
+                                                –
+                                                <span th:if="${experience.endDate != null}"
+                                                      th:text="${#temporals.format(experience.endDate, 'MMM yyyy')}">End</span>
+                                                <span th:if="${experience.endDate == null}">Present</span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="tl-company-logo"
+                                         th:if="${experience.companyName == 'Frugality Fintech'}">
+                                        <img th:src="@{/assets/images/companies/frugality-fintech.png}"
+                                             alt="Frugality Fintech logo"
+                                             loading="lazy">
+                                    </div>
+                                </div>
+
+
+                                <ul class="tl-bullets"
+                                    th:if="${not #lists.isEmpty(experience.descPoints)}">
+                                    <li th:each="descPoint : ${experience.descPoints}"
+                                        th:text="${descPoint}"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Projects -->
-    <section class="projects">
+    <section class="projects reveal-on-scroll">
         <div class="container">
             <h2 class="h2" id="projects">Recent Projects</h2>
             <div class="project-boxes">
-                <article class="project-box" th:each="project : ${projects} ">
+                <article class="project-box interactive-card reveal-item" th:each="project : ${projects}">
                     <div class="project-textbox">
                         <div>
                             <h3 class="h4" th:text="${project.name}">Project Name</h3>
                             <p class="project-text" th:text="${project.description}">Project Description</p>
                         </div>
                         <div class="project-info">
-                            <a th:href="${project.projectLink}" class="link" target="_blank" rel="noopener"
-                               th:text="${project.projectLink != null ? 'View Project' : ''}">View Project</a>
+                            <a th:if="${project.projectLink != null and !#strings.isEmpty(project.projectLink)}"
+                               th:href="${project.projectLink}" class="link" target="_blank" rel="noopener">View Project &rarr;</a>
                         </div>
                     </div>
                 </article>
@@ -253,16 +360,14 @@
     </section>
 
     <!-- Skills -->
-
-    <!-- Skills -->
-    <section class="skills-section">
+    <section class="skills-section reveal-on-scroll">
         <div class="container">
-            <h2 class="h2" id="skills">Skills</h2>
+            <h2 class="h2" id="skills">Technical Skills</h2>
 
             <div class="skills-grid">
 
                 <!-- Languages -->
-                <div class="skills-group"
+                <div class="skills-group interactive-card reveal-item"
                      th:if="${!#lists.isEmpty(languages)}">
 
                     <h3 class="skills-group-title">Languages</h3>
@@ -277,7 +382,7 @@
                 </div>
 
                 <!-- Frameworks -->
-                <div class="skills-group"
+                <div class="skills-group interactive-card reveal-item"
                      th:if="${!#lists.isEmpty(frameworks)}">
 
                     <h3 class="skills-group-title">Frameworks</h3>
@@ -292,7 +397,7 @@
                 </div>
 
                 <!-- Cloud & Databases -->
-                <div class="skills-group"
+                <div class="skills-group interactive-card reveal-item"
                      th:if="${!#lists.isEmpty(cloudDatabases)}">
 
                     <h3 class="skills-group-title">Cloud &amp; Databases</h3>
@@ -307,7 +412,7 @@
                 </div>
 
                 <!-- Tools -->
-                <div class="skills-group"
+                <div class="skills-group interactive-card reveal-item"
                      th:if="${!#lists.isEmpty(tools)}">
 
                     <h3 class="skills-group-title">Tools</h3>
@@ -325,23 +430,132 @@
         </div>
     </section>
 
+    <!-- Achievements & Responsibilities -->
+    <section class="achievements-section reveal-on-scroll">
+        <div class="container">
+            <div class="career-grid achievements-grid">
+                <!-- Achievements Column -->
+                <div class="career-column" id="achievements" th:if="${!#lists.isEmpty(achievements)}">
+                    <h2 class="h2">Achievements</h2>
+                    <div class="achievements-list">
+                        <article class="achievement-card interactive-card reveal-item" th:each="achievement : ${achievements}">
+                            <div class="achievement-header">
+                                <span class="achievement-award" th:if="${achievement.award != null}" th:text="${achievement.award}">Award</span>
+                                <span class="achievement-date" th:if="${achievement.period != null}" th:text="${achievement.period}">Period</span>
+                            </div>
+                            <h3 class="achievement-title" th:text="${achievement.title}">Achievement Title</h3>
+                            <p class="achievement-desc" th:if="${achievement.description != null}" th:text="${achievement.description}">Description</p>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Responsibilities Column -->
+                <div class="career-column" id="responsibilities" th:if="${!#lists.isEmpty(responsibilities)}">
+                    <h2 class="h2">Positions of Responsibility</h2>
+                    <div class="responsibilities-list">
+                        <article class="responsibility-card interactive-card reveal-item" th:each="resp : ${responsibilities}">
+                            <div class="responsibility-header">
+                                <span class="responsibility-badge">Leadership</span>
+                                <span class="responsibility-period" th:if="${resp.period != null}" th:text="${resp.period}">Period</span>
+                            </div>
+                            <h3 class="responsibility-role" th:text="${resp.roleTitle}">Role Title</h3>
+                            <p class="responsibility-org" th:text="${resp.organization}">Organization</p>
+                            <p class="responsibility-desc" th:if="${resp.description != null}" th:text="${resp.description}">Description</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research (dynamically displayed if entries exist) -->
+    <section class="research-section reveal-on-scroll" th:if="${!#lists.isEmpty(researchEntries)}">
+        <div class="container">
+            <h2 class="h2" id="research">Research</h2>
+            <div class="research-list">
+                <article class="research-card interactive-card reveal-item" th:each="entry : ${researchEntries}">
+                    <div class="research-card-header">
+                        <span class="research-type" th:text="${entry.type}">Patent</span>
+                        <p class="research-meta">
+                            <span th:if="${entry.referenceNumber != null and !#strings.isEmpty(entry.referenceNumber)}"
+                                  th:text="${entry.referenceNumber}">Reference</span>
+                            <span th:if="${entry.status != null and !#strings.isEmpty(entry.status)}"
+                                  th:text="${entry.status}">Status</span>
+                            <span th:if="${entry.publishedDate != null}"
+                                  th:text="${#temporals.format(entry.publishedDate, 'MMM yyyy')}">Date</span>
+                        </p>
+                    </div>
+                    <h3 class="research-title" th:text="${entry.title}">Research title</h3>
+                    <p class="research-byline"
+                       th:if="${(entry.authors != null and !#strings.isEmpty(entry.authors)) or (entry.venue != null and !#strings.isEmpty(entry.venue))}">
+                        <span th:if="${entry.authors != null and !#strings.isEmpty(entry.authors)}"
+                              th:text="${entry.authors}">Authors</span>
+                        <span th:if="${entry.authors != null and !#strings.isEmpty(entry.authors) and entry.venue != null and !#strings.isEmpty(entry.venue)}"> · </span>
+                        <span th:if="${entry.venue != null and !#strings.isEmpty(entry.venue)}"
+                              th:text="${entry.venue}">Venue</span>
+                    </p>
+                    <p class="research-summary" th:if="${entry.description != null and !#strings.isEmpty(entry.description)}"
+                       th:text="${entry.description}">Summary</p>
+                    <a th:if="${entry.link != null and !#strings.isEmpty(entry.link)}"
+                       th:href="${entry.link}"
+                       class="link research-link"
+                       target="_blank"
+                       rel="noopener"
+                       th:text="${entry.type == 'Patent' ? 'View Patent' : 'View Publication'}">View</a>
+                </article>
+            </div>
+        </div>
+    </section>
 
     <!-- Contact -->
-    <section class="contact">
+    <section class="contact reveal-on-scroll" id="contact">
         <div class="container">
-            <h2 class="h2" id="contact">Contact Me</h2>
-            <div class="contact-content">
+            <h2 class="h2">Contact Me</h2>
+            <div class="contact-content interactive-card">
                 <div class="contact-textbox">
                     <div class="hire-alert-div">
-                        <a href="mailto:aditya.chaurasia8991@gmail.com" class="hire-alert">Mail me</a>
+                        <a href="mailto:shiwansait@gmail.com" class="hire-alert">
+                            <span class="indicator"></span>
+                            Mail me
+                        </a>
                     </div>
 
                     <p class="contact-text">
-                        My interests span scalable computing systems and machine learning - areas I'm currently exploring at Georgia Tech.
-                        I'm passionate about solving complex problems and creating innovative, high-performance solutions.
-                        With experience in large-scale projects and a drive for continuous learning, I'm eager to contribute to cutting-edge
-                        systems that have a meaningful impact and can scale efficiently.
+                        Passionate about backend engineering, distributed systems, and building scalable, reliable solutions.
+
+                        <br><br>
+                        Exploring system design, cloud-native technologies, and AI/ML integrations. Open to meaningful technical discussions and collaborations.
+
+                        Feel free to connect via email, phone, or DM!
                     </p>
+
+                    <ul class="contact-info-list">
+                        <li class="contact-info-item">
+                            <span class="contact-info-icon">&#9993;</span>
+                            <span class="contact-info-label">Email:</span>
+                            <a href="mailto:shiwansait@gmail.com">shiwansait@gmail.com</a>
+                        </li>
+                        <li class="contact-info-item">
+                            <span class="contact-info-icon">&#9742;</span>
+                            <span class="contact-info-label">Phone:</span>
+                            <a href="tel:+917307018904">+91 7307018904</a>
+                        </li>
+                        <li class="contact-info-item">
+                            <span class="contact-info-icon">&#128279;</span>
+                            <span class="contact-info-label">LinkedIn:</span>
+                            <a href="https://www.linkedin.com/in/shiwans-pal-419249248/" target="_blank" rel="noopener">linkedin.com/in/shiwans-pal-419249248</a>
+                        </li>
+                        <li class="contact-info-item">
+                            <span class="contact-info-icon">&#128187;</span>
+                            <span class="contact-info-label">GitHub:</span>
+                            <a href="https://github.com/Shiwans60" target="_blank" rel="noopener">github.com/Shiwans60</a>
+                        </li>
+                        <li class="contact-info-item">
+                            <span class="contact-info-icon">&#128205;</span>
+                            <span class="contact-info-label">Location:</span>
+                            <span>Pune, Maharashtra, India</span>
+                        </li>
+                    </ul>
                 </div>
                 <form th:action="@{/save-message}" th:object="${newMessage}" method="POST" class="contact-form">
                     <div class="form-field">
@@ -359,18 +573,16 @@
                         </label>
                         <input type="email" th:field="*{email}" id="email" required inputmode="email"
                                th:placeholder="${#fields.hasErrors('email')} ? 'This is required' : 'Enter your email'"/>
-                        <!--                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>-->
                     </div>
                     <div class="form-field">
                         <label for="message">
                             How can I help you?
                             <span th:if="${#fields.hasErrors('message')}" class="text-danger"> - this is required</span>
                         </label>
-                        <textarea th:field="*{message}" id="message" required
+                        <textarea th:field="*{message}" id="message" required rows="4"
                                   th:placeholder="${#fields.hasErrors('message')} ? *{message} : 'Enter your message'"></textarea>
-                        <!--                <div th:if="${#fields.hasErrors('message')}" th:errors="*{message}" class="text-danger"></div>-->
                     </div>
-                    <button type="submit" class="btn btn-cta">Send</button>
+                    <button type="submit" class="btn btn-cta">Send Message</button>
                 </form>
             </div>
         </div>
@@ -383,25 +595,25 @@
             <nav>
                 <ol class="footer-links">
                     <li class="footer-link">
-                        <a title="GitHub" href="https://github.com/chaurasia-aditya" target="_blank" rel="noopener"
+                        <a title="GitHub" href="https://github.com/Shiwans60" target="_blank" rel="noopener"
                         ><img
                                 loading="lazy"
-                                src="assets/images/social-links/github.svg"
+                                th:src="@{/assets/images/social-links/github.svg}"
                                 alt="GitHub"
                         /></a>
                     </li>
                     <li class="footer-link">
-                        <a title="Linkedin" href="https://www.linkedin.com/in/chauri/" target="_blank" rel="noopener"
+                        <a title="LinkedIn" href="https://www.linkedin.com/in/shiwans-pal-419249248/" target="_blank" rel="noopener"
                         ><img
                                 loading="lazy"
-                                src="assets/images/social-links/linkedin.svg"
-                                alt="Linkedin"
+                                th:src="@{/assets/images/social-links/linkedin.svg}"
+                                alt="LinkedIn"
                         /></a>
                     </li>
                 </ol>
             </nav>
             <p class="footer-text">
-                &copy; <span>2024</span> - Backend developed and integrated by <a target="_blank" rel="noopener" href="https://github.com/chaurasia-aditya">Aditya Chaurasia.</a>
+                &copy; <span>2026</span> - Backend developed and integrated by <a target="_blank" rel="noopener" href="https://github.com/Shiwans60">Shiwans Pal.</a>
             </p>
             <label class="theme-switch" for="theme-switch">
                 <span>Dark Theme</span>

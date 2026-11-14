@@ -1,6 +1,5 @@
 package com.Shiwans.portfolio.Controller;
 
-
 import com.Shiwans.portfolio.entity.*;
 import com.Shiwans.portfolio.service.interfaces.*;
 import jakarta.validation.Valid;
@@ -12,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -25,52 +26,51 @@ public class BaseController {
     private final MessageService messageService;
     private final ProjectService projectService;
     private final ResearchService researchService;
+    private final AchievementService achievementService;
+    private final ResponsibilityService responsibilityService;
 
     @Autowired
     public BaseController(ExperienceService experienceService, SkillService skillService,
                           EducationService educationService, MessageService messageService,
-                          ProjectService projectService, ResearchService researchService) {
+                          ProjectService projectService, ResearchService researchService,
+                          AchievementService achievementService, ResponsibilityService responsibilityService) {
         this.experienceService = experienceService;
         this.skillService = skillService;
         this.educationService = educationService;
         this.messageService = messageService;
         this.projectService = projectService;
         this.researchService = researchService;
+        this.achievementService = achievementService;
+        this.responsibilityService = responsibilityService;
     }
 
-    private void getEducationAttributes(Model theModel){
-        //Education
-        List<Education> educations = educationService.getAllEducationDetails();
+    private void getEducationAttributes(Model theModel) {
 
-//        for(Education tempEducation: educations)
-//            tempEducation.setCourses();
+        List<Education> educations = new ArrayList<>(
+                educationService.getAllEducationDetails()
+        );
+
+        // Display latest education first
+        educations.sort(
+                Comparator.comparing(
+                        Education::getStartDate,
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                )
+        );
 
         theModel.addAttribute("education", educations);
     }
 
     private void getExperienceAttributes(Model theModel){
-        //Experience
         List<Experience> experiences = experienceService.getPortfolioWorkExperiences();
-
-//        for(Experience temp: experiences)
-//            temp.setDescPoints();
-
         theModel.addAttribute("workEx", experiences);
     }
 
     private void getSkillAttributes(Model model) {
-
-        List<Skill> languages =
-                skillService.getSkillsByCategory("Languages");
-
-        List<Skill> frameworks =
-                skillService.getSkillsByCategory("Frameworks");
-
-        List<Skill> cloudDatabases =
-                skillService.getSkillsByCategory("Cloud & Databases");
-
-        List<Skill> tools =
-                skillService.getSkillsByCategory("Tools");
+        List<Skill> languages = skillService.getSkillsByCategory("Languages");
+        List<Skill> frameworks = skillService.getSkillsByCategory("Frameworks");
+        List<Skill> cloudDatabases = skillService.getSkillsByCategory("Cloud & Databases");
+        List<Skill> tools = skillService.getSkillsByCategory("Tools");
 
         model.addAttribute("languages", languages);
         model.addAttribute("frameworks", frameworks);
@@ -79,16 +79,23 @@ public class BaseController {
     }
 
     private void getProjectAttributes(Model theModel){
-        //Projects
         List<Project> projects = projectService.getAllProjects();
-
         theModel.addAttribute("projects", projects);
     }
 
     private void getResearchAttributes(Model theModel){
         List<Research> researchEntries = researchService.getAllResearch();
-
         theModel.addAttribute("researchEntries", researchEntries);
+    }
+
+    private void getAchievementAttributes(Model theModel) {
+        List<Achievement> achievements = achievementService.getAllAchievements();
+        theModel.addAttribute("achievements", achievements);
+    }
+
+    private void getResponsibilityAttributes(Model theModel) {
+        List<Responsibility> responsibilities = responsibilityService.getAllResponsibilities();
+        theModel.addAttribute("responsibilities", responsibilities);
     }
 
     private void getMessageAttributes(Model theModel){
@@ -96,13 +103,19 @@ public class BaseController {
         theModel.addAttribute("newMessage", newMessage);
     }
 
-    @GetMapping({"","/","/portfolio"})
-    public String homeView(Model theModel, @RequestParam(value = "rateLimitError", required = false) String rateLimitError){
+    private void populateCommonAttributes(Model theModel) {
         getEducationAttributes(theModel);
         getExperienceAttributes(theModel);
         getSkillAttributes(theModel);
         getProjectAttributes(theModel);
         getResearchAttributes(theModel);
+        getAchievementAttributes(theModel);
+        getResponsibilityAttributes(theModel);
+    }
+
+    @GetMapping({"","/" ,"/portfolio"})
+    public String homeView(Model theModel, @RequestParam(value = "rateLimitError", required = false) String rateLimitError){
+        populateCommonAttributes(theModel);
         getMessageAttributes(theModel);
 
         if (rateLimitError != null) {
@@ -122,15 +135,8 @@ public class BaseController {
     public String saveMessage(@Valid @ModelAttribute("newMessage") Message theMessage,
                               BindingResult bindingResult, Model theModel){
         if(bindingResult.hasErrors()) {
-            getEducationAttributes(theModel);
-            getExperienceAttributes(theModel);
-            getSkillAttributes(theModel);
-            getProjectAttributes(theModel);
-            getResearchAttributes(theModel);
-
-            //Message attributes not updated
+            populateCommonAttributes(theModel);
             theModel.addAttribute("newMessage", theMessage);
-
             return "portfolio";
         }
 

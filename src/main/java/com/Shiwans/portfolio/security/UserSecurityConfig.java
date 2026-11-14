@@ -8,12 +8,13 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 
@@ -46,6 +47,8 @@ public class UserSecurityConfig {
         FilterRegistrationBean<ApiRateLimitFilter> registration =
                 new FilterRegistrationBean<>(filter);
 
+        // Prevent double-registration via the servlet container;
+        // Spring Security already adds it via addFilterBefore.
         registration.setEnabled(false);
 
         return registration;
@@ -57,6 +60,19 @@ public class UserSecurityConfig {
             ApiRateLimitFilter apiRateLimitFilter,
             DaoAuthenticationProvider authenticationProvider
     ) throws Exception {
+
+        // Use CookieCsrfTokenRepository so the CSRF token is stored in a cookie
+        // rather than in the HTTP session. This prevents the
+        // "Cannot create a session after the response has been committed"
+        // IllegalStateException that occurs when Thymeleaf processes th:action
+        // on the contact form after Tomcat has already flushed the response buffer.
+        CookieCsrfTokenRepository csrfTokenRepository =
+                CookieCsrfTokenRepository.withHttpOnlyFalse();
+
+        // Spring Security 6 requires an explicit RequestAttributeHandler when
+        // using deferred CSRF token loading with CookieCsrfTokenRepository.
+        XorCsrfTokenRequestAttributeHandler requestHandler =
+                new XorCsrfTokenRequestAttributeHandler();
 
         http
                 .authenticationProvider(authenticationProvider)
@@ -75,9 +91,13 @@ public class UserSecurityConfig {
                         .anyRequest().permitAll()
                 )
 
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(csrfTokenRepository)
+                        .csrfTokenRequestHandler(requestHandler)
+                )
+
                 .httpBasic(Customizer.withDefaults())
 
-                // Keep CSRF enabled for session-based Thymeleaf login
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/authenticateUser")
