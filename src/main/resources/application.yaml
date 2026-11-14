@@ -1,0 +1,59 @@
+server:
+  port: ${PORT:8080}
+  address: 127.0.0.1
+  forward-headers-strategy: native
+
+spring:
+  application:
+    name: portfolio
+
+  # Thymeleaf
+  thymeleaf:
+    cache: false
+
+  # Static resource caching
+  web:
+    resources:
+      cache:
+        period: 0
+
+  # PostgreSQL
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:portfolio}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Flyway
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+# Logging
+logging:
+  level:
+    org:
+      springframework:
+        security: INFO
+
+# Skills
+skill:
+  categories: "Languages,Frameworks,Cloud & Databases,Tools"
+
+# Application settings
+app:
+  rate-limit:
+    enabled: true
+    homepage:
+      capacity: 50
+    message:
+      capacity: 20

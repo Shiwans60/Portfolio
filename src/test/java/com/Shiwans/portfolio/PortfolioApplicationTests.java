@@ -79,7 +79,7 @@ class PortfolioApplicationTests {
     @Test
     void testProjectsLoaded() {
         List<Project> projects = projectService.getAllProjects();
-        assertEquals(2, projects.size());
+        assertEquals(5, projects.size());
         assertTrue(projects.stream().anyMatch(p -> p.getName().equals("AI-Fitness-Tracker")));
         assertTrue(projects.stream().anyMatch(p -> p.getName().equals("Scoreit")));
     }
